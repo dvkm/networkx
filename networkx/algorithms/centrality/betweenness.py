@@ -12,7 +12,7 @@ __all__ = ['betweenness_centrality', 'edge_betweenness_centrality',
 @py_random_state(5)
 @not_implemented_for('multigraph')
 def betweenness_centrality(G, k=None, normalized=True, weight=None,
-                           endpoints=False, seed=None):
+                           endpoints=False, seed=None, nodes=None):
     r"""Compute the shortest-path betweenness centrality for nodes.
 
     Betweenness centrality of a node $v$ is the sum of the
@@ -116,10 +116,11 @@ def betweenness_centrality(G, k=None, normalized=True, weight=None,
        http://moreno.ss.uci.edu/23.pdf
     """
     betweenness = dict.fromkeys(G, 0.0)  # b[v]=0 for v in G
-    if k is None:
-        nodes = G
-    else:
-        nodes = seed.sample(G.nodes(), k)
+    if nodes is None:
+        if k is None:
+            nodes = G
+        else:
+            nodes = seed.sample(G.nodes(), k)
     for s in nodes:
         # single source shortest paths
         if weight is None:  # use BFS
